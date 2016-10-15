@@ -14,6 +14,21 @@ Task("Icon").Does(() =>{
     });
 });
 
+Task("Build-Swift").Does(() => {
+    var settings = new ProcessSettings {
+        Arguments ="build -C swift/ActiveWindow"
+    };
+    StartProcess("swift", settings);
+});
+
+Task("Run-Swift")
+    .IsDependentOn("Build-Swift")
+    .Does(() => {
+        var settings = new ProcessSettings {
+            Arguments =""
+        };
+        StartProcess("swift/ActiveWindow/.build/debug/ActiveWindow", settings);
+});
 
 var target = Argument("target", "default");
 RunTarget(target);

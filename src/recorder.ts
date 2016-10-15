@@ -2,9 +2,10 @@ import * as vscode from "vscode";
 import {  EventEmitter } from "events";
 import * as path from "path";
 import * as fs from "fs";
+var findActiveWindow = require("mac-active-window")
+    .findActiveWindow as (number) => Promise<{ location: IArea }>;
 
 var Aperture = require("aperture.js") 
-
 
 class Utility {
     static getUserHome() {
@@ -54,6 +55,8 @@ export class RecordController {
     green = "white";
     red = "#D46F6A";
     
+    default = { x: 0, y: 0, width: 100, height: 100 };
+    
     constructor() {
         this.recorder.on("error", (msg) => {
             vscode.window.showErrorMessage(msg);
@@ -83,9 +86,11 @@ export class RecordController {
     startOrStop() {
         let text = this.item.text;
         if(text == this.startText) {
-            this.recorder.startRecord(0, { x: 0, y: 0, width: 200, height: 200 });
-            this.item.text = this.stopText;
-            this.item.color = this.red;
+            findActiveWindow(process.pid).then(rs => {
+                this.recorder.startRecord(0, rs.location);
+                this.item.text = this.stopText;
+                this.item.color = this.red;
+            });
         }else if(text == this.stopText) {
             this.recorder.stopRecord();
             this.item.text = this.startText;

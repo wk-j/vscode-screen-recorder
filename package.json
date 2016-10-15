@@ -5,8 +5,8 @@
   "version": "0.0.1",
   "publisher": "wk-j",
   "keywords": [
-      "Screen",
-      "Video"
+    "Screen",
+    "Video"
   ],
   "engines": {
     "vscode": "^1.5.0"
@@ -20,7 +20,7 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [ ]
+    "commands": []
   },
   "scripts": {
     "publish": "vsce publish",
@@ -36,6 +36,7 @@
     "vscode": "^1.0.0"
   },
   "dependencies": {
-    "aperture.js": "^0.1.0"
+    "aperture.js": "^0.1.0",
+    "mac-active-window": "0.0.4"
   }
 }

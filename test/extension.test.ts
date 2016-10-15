@@ -13,6 +13,10 @@ import * as ext from '../src/extension';
 
 import { Recorder } from "../src/recorder";
 
+var findActiveWindow = require("mac-active-window")
+    .findActiveWindow as (number) => Promise<{ location: any }>;
+
+
 // Defines a Mocha test suite to group tests of similar kind together
 suite("Extension Tests", () => {
 
@@ -24,11 +28,18 @@ suite("Extension Tests", () => {
 });
 
 suite("Recorder Tests", () => {
-    test("Should record", (done) => {
+    test.skip("Should record", (done) => {
         let rc = new Recorder();
         rc.startRecord(5000, { x: 100, y: 100, width: 100, height: 100 } );
         rc.on("finish", (file) => {
-            assert.equal("", file);
+            done();
+        });
+    });
+    
+    test("Should get location", (done) => {
+        console.log(process.pid);
+        findActiveWindow(process.pid).then(rs => {
+            console.log(rs);
             done();
         });
     });
