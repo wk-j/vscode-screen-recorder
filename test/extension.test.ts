@@ -26,7 +26,7 @@ suite("Extension Tests", () => {
 suite("Recorder Tests", () => {
     test("Should record", (done) => {
         let rc = new Recorder();
-        rc.startRecord(5000);
+        rc.startRecord(5000, { x: 100, y: 100, width: 100, height: 100 } );
         rc.on("finish", (file) => {
             assert.equal("", file);
             done();
