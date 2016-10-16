@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "aperture.js": "^0.1.0",
-    "mac-active-window": "0.0.6"
+    "mac-active-window": "0.0.8"
   }
 }
