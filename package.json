@@ -4,6 +4,10 @@
   "description": "Record Visual Studio Code Screen",
   "version": "0.0.1",
   "publisher": "wk-j",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wk-j/vscode-screen-recorder"
+  },
   "keywords": [
     "Screen",
     "Video"
@@ -37,6 +41,6 @@
   },
   "dependencies": {
     "aperture.js": "^0.1.0",
-    "mac-active-window": "0.0.5"
+    "mac-active-window": "0.0.6"
   }
 }

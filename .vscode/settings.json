@@ -3,7 +3,8 @@
     "files.exclude": {
         "out": false ,
         "node_modules": true,
-        "tools": true
+        "tools": true,
+        "*.log": true
     },
     "search.exclude": {
         "out": true // set this to false to include "out" folder in search results
