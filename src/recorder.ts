@@ -3,9 +3,10 @@ import {  EventEmitter } from "events";
 import * as path from "path";
 import * as fs from "fs";
 
-var findActiveWindow = require("mac-active-window")
-    .findActiveWindow as (number) => Promise<{ location: IArea }>;
+var mac = require("mac-active-window")
 
+var findActiveWindow = mac.findActiveWindow as (number) => Promise<{ location: IArea }>;
+var findScreenSize = mac.findScreenSize as () => Promise<{ width: number, height: number }>;
 var Aperture = require("aperture.js") 
 
 class Utility {
@@ -58,8 +59,6 @@ export class RecordController {
     
     default = { x: 0, y: 0, width: 100, height: 100 };
     
-    screenHeight = 1000;
-    
     constructor() {
         this.recorder.on("error", (msg) => {
             vscode.window.showErrorMessage(msg);
@@ -90,12 +89,19 @@ export class RecordController {
         return process.env.VSCODE_PID as number;
     }
     
-    startOrStop() {
+    async startOrStop() {
         let text = this.item.text;
         if(text == this.startText) {
             let pid = this.getPid();
+            var screenSize = await findScreenSize();
             findActiveWindow(pid).then(rs => {
-                this.recorder.startRecord(0, rs.location);
+                let newLocation = {
+                    x: rs.location.x,
+                    y: screenSize.height - rs.location.y - rs.location.height,
+                    width: rs.location.width,
+                    height: rs.location.height
+                }
+                this.recorder.startRecord(0, newLocation);
                 this.item.text = this.stopText;
                 this.item.color = this.red;
             });

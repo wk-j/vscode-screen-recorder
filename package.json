@@ -1,7 +1,7 @@
 {
   "name": "screen-recorder",
   "displayName": "Screen Recorder",
-  "description": "Record VS Code Screen",
+  "description": "Record Visual Studio Code Screen",
   "version": "0.0.1",
   "publisher": "wk-j",
   "keywords": [
@@ -29,7 +29,6 @@
     "postinstall": "node ./node_modules/vscode/bin/install"
   },
   "devDependencies": {
-    "@types/electron": "^1.4.24",
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
     "mocha": "^2.3.3",
@@ -38,6 +37,6 @@
   },
   "dependencies": {
     "aperture.js": "^0.1.0",
-    "mac-active-window": "0.0.4"
+    "mac-active-window": "0.0.5"
   }
 }
