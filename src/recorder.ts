@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import {  EventEmitter } from "events";
 import * as path from "path";
 import * as fs from "fs";
+
 var findActiveWindow = require("mac-active-window")
     .findActiveWindow as (number) => Promise<{ location: IArea }>;
 
@@ -57,6 +58,8 @@ export class RecordController {
     
     default = { x: 0, y: 0, width: 100, height: 100 };
     
+    screenHeight = 1000;
+    
     constructor() {
         this.recorder.on("error", (msg) => {
             vscode.window.showErrorMessage(msg);
@@ -83,10 +86,15 @@ export class RecordController {
         this.item.dispose();
     }
     
+    getPid() {
+        return process.env.VSCODE_PID as number;
+    }
+    
     startOrStop() {
         let text = this.item.text;
         if(text == this.startText) {
-            findActiveWindow(process.pid).then(rs => {
+            let pid = this.getPid();
+            findActiveWindow(pid).then(rs => {
                 this.recorder.startRecord(0, rs.location);
                 this.item.text = this.stopText;
                 this.item.color = this.red;
