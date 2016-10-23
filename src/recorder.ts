@@ -7,16 +7,22 @@ var mac = require("mac-active-window")
 
 var findActiveWindow = mac.findActiveWindow as (number) => Promise<{ location: IArea }>;
 var findScreenSize = mac.findScreenSize as () => Promise<{ width: number, height: number }>;
+var resizeFrontMostWindow = mac.resizeFrontMostWindow as (w,h) => Promise<{}>;
 var Aperture = require("aperture.js") 
 
 class Utility {
     static getUserHome() {
         return process.env.HOME || process.env.USERPROFILE;
     }
+    
+    static getDefaultName() {
+        let base = `vscode-${Math.round(+new Date().getTime())}.mp4`;
+        return base;
+    }
 
     static copyToHome(file) {
         let home = Utility.getUserHome();
-        let base = path.basename(file).replace("tmp", "vscode");
+        let base = Utility.getDefaultName();
         let dest = path.join(home, "Desktop", base);
         fs.createReadStream(file).pipe(fs.createWriteStream(dest));
         return dest;
@@ -46,6 +52,52 @@ interface IAperture {
     stopRecording: () => Promise<string>;
 }
 
+export class Resizer {
+    constructor() {
+        vscode.commands.registerCommand("screenRecorder.resizeWindow", () => {
+            this.showSizeConfig();
+        });
+    }
+
+    getUserConfig() {
+       var config = vscode.workspace.getConfiguration("screenRecorder").get("windowSizes") as any[];
+       if(config) {
+        return config.map(x => {
+            return { label: `${x.width}x${x.height}`, description: ""}
+        });
+       }else {
+           return [];
+       }
+    }
+
+    showSizeConfig() {
+        var items: vscode.QuickPickItem[] = [
+            { label: "400x240", description: "" },
+            { label: "450x270", description: "" },
+            { label: "640x360", description: "" },
+            { label: "854x480", description: "" },
+            { label: "1280x720", description: "" },
+            { label: "1920x1080", description: "" },
+        ];
+
+        var config = this.getUserConfig();
+        config.forEach(x => {
+            items.push(x);
+        });
+
+        var quick = vscode.window.showQuickPick(items)
+        quick.then(size => {
+            let s = size.label.split("x").map(x => x.trim())
+            let rs = resizeFrontMostWindow(s[0], s[1]);
+            rs.catch(err => {
+                vscode.window.showErrorMessage(err);
+            });
+        });
+    }
+
+    dispose() {}
+}
+
 export class RecordController {
     item : vscode.StatusBarItem;
     recorder = new Recorder();
@@ -53,9 +105,8 @@ export class RecordController {
     startText = "$(device-camera-video)  Record Screen";
     stopText = "$(diff-modified)  Stop Recording";
     
-    //green = "#88CC88";
     green = "white";
-    red = "#D46F6A";
+    red = "#FF851B";
     
     default = { x: 0, y: 0, width: 100, height: 100 };
     

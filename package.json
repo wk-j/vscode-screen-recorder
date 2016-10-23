@@ -2,7 +2,7 @@
   "name": "screen-recorder",
   "displayName": "Screen Recorder",
   "description": "Record Visual Studio Code Screen",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "wk-j",
   "repository": {
     "type": "git",
@@ -24,7 +24,12 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": []
+    "commands": [
+      {
+        "command": "screenRecorder.resizeWindow",
+        "title": "Resize window"
+      }
+    ]
   },
   "scripts": {
     "publish": "vsce publish",
@@ -41,6 +46,6 @@
   },
   "dependencies": {
     "aperture.js": "^0.1.0",
-    "mac-active-window": "0.0.8"
+    "mac-active-window": "0.0.10"
   }
 }
